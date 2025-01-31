@@ -1,11 +1,15 @@
-package nju.jiffies.consumer;
+package nju.jiffies.consumer.proxy;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
+import nju.jiffies.RpcApplication;
+import nju.jiffies.config.RpcConfig;
 import nju.jiffies.model.RpcRequest;
 import nju.jiffies.model.RpcResponse;
 import nju.jiffies.serializer.JDKSerializer;
 import nju.jiffies.serializer.Serializer;
+import nju.jiffies.utils.ConfigUtils;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -15,16 +19,29 @@ public class ServiceProxy implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         Serializer serializer = new JDKSerializer();
 
+        RpcConfig rpcConfig = RpcApplication.getRpcConfig();
+        String serverHost = rpcConfig.getServerHost();
+        Integer serverPort = rpcConfig.getServerPort();
+
         RpcRequest rpcRequest = RpcRequest.builder()
                 .serviceName(method.getDeclaringClass().getName())
                 .methodName(method.getName())
                 .parameterTypes(new Class[]{String.class})
-                .args(new Object[]{"jiffies"})
+                .args(args)
                 .build();
 
         try {
             byte[] body = serializer.serialize(rpcRequest);
-            try (HttpResponse response = HttpRequest.post("http://127.0.0.1:8080").body(body).execute()) {
+            try (
+                    HttpResponse response = HttpRequest
+                            .post(StrUtil.format(
+                                    "http://{}:{}",
+                                    serverHost,
+                                    serverPort
+                            ))
+                            .body(body)
+                            .execute()
+            ) {
                 RpcResponse rpcResponse = serializer.deserialize(response.bodyBytes(), RpcResponse.class);
                 return rpcResponse.getData();
             }

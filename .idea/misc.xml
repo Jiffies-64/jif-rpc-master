@@ -9,6 +9,7 @@
         <option value="$PROJECT_DIR$/rpc-consumer/pom.xml" />
         <option value="$PROJECT_DIR$/rpc-producer/pom.xml" />
         <option value="$PROJECT_DIR$/jif-rpc-easy/pom.xml" />
+        <option value="$PROJECT_DIR$/jif-rpc-core/pom.xml" />
       </list>
     </option>
   </component>
