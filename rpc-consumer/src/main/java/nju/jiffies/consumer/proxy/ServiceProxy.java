@@ -7,10 +7,8 @@ import nju.jiffies.RpcApplication;
 import nju.jiffies.config.RpcConfig;
 import nju.jiffies.model.RpcRequest;
 import nju.jiffies.model.RpcResponse;
-import nju.jiffies.serializer.JDKSerializer;
 import nju.jiffies.serializer.Serializer;
 import nju.jiffies.serializer.SerializerFactory;
-import nju.jiffies.utils.ConfigUtils;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

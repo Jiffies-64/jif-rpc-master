@@ -8,7 +8,6 @@ import nju.jiffies.RpcApplication;
 import nju.jiffies.model.RpcRequest;
 import nju.jiffies.model.RpcResponse;
 import nju.jiffies.registry.LocalRegistry;
-import nju.jiffies.serializer.JDKSerializer;
 import nju.jiffies.serializer.Serializer;
 import nju.jiffies.serializer.SerializerFactory;
 

@@ -1,0 +1,3 @@
+jdk=nju.jiffies.serializer.JdkSerializer
+hessian=nju.jiffies.serializer.HessianSerializer
+kryo=nju.jiffies.serializer.KryoSerializer

@@ -2,7 +2,7 @@ package nju.jiffies.serializer;
 
 import java.io.*;
 
-public class JDKSerializer implements Serializer{
+public class JdkSerializer implements Serializer{
     @Override
     public <T> byte[] serialize(T object) throws IOException {
         ByteArrayOutputStream os = new ByteArrayOutputStream();

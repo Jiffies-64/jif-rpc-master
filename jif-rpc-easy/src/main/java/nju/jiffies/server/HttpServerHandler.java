@@ -7,7 +7,7 @@ import io.vertx.core.http.HttpServerResponse;
 import nju.jiffies.model.RpcRequest;
 import nju.jiffies.model.RpcResponse;
 import nju.jiffies.registry.LocalRegistry;
-import nju.jiffies.serializer.JDKSerializer;
+import nju.jiffies.serializer.JdkSerializer;
 import nju.jiffies.serializer.Serializer;
 
 import java.io.IOException;
@@ -16,7 +16,7 @@ import java.lang.reflect.Method;
 public class HttpServerHandler implements Handler<HttpServerRequest> {
     @Override
     public void handle(HttpServerRequest req) {
-        final Serializer serializer = new JDKSerializer();
+        final Serializer serializer = new JdkSerializer();
 
         System.out.println("Request received " + req.method() + " "  + req.uri());
 
