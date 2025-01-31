@@ -9,6 +9,7 @@ import nju.jiffies.model.RpcRequest;
 import nju.jiffies.model.RpcResponse;
 import nju.jiffies.serializer.JDKSerializer;
 import nju.jiffies.serializer.Serializer;
+import nju.jiffies.serializer.SerializerFactory;
 import nju.jiffies.utils.ConfigUtils;
 
 import java.lang.reflect.InvocationHandler;
@@ -17,7 +18,7 @@ import java.lang.reflect.Method;
 public class ServiceProxy implements InvocationHandler {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        Serializer serializer = new JDKSerializer();
+        Serializer serializer = SerializerFactory.getInstance(RpcApplication.getRpcConfig().getSerializer());
 
         RpcConfig rpcConfig = RpcApplication.getRpcConfig();
         String serverHost = rpcConfig.getServerHost();
