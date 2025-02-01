@@ -1,4 +1,4 @@
-package nju.jiffies.consumer.proxy;
+package nju.jiffies.proxy;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -2,7 +2,10 @@ package nju.jiffies;
 
 import lombok.extern.slf4j.Slf4j;
 import nju.jiffies.config.RpcConfig;
+import nju.jiffies.config.RegistryConfig;
 import nju.jiffies.constant.RpcConstant;
+import nju.jiffies.registry.Registry;
+import nju.jiffies.registry.RegistryFactory;
 import nju.jiffies.utils.ConfigUtils;
 
 /**
@@ -22,6 +25,12 @@ public class RpcApplication {
     public static void init(RpcConfig newRpcConfig) {
         rpcConfig = newRpcConfig;
         log.info("rpc init, config = {}", newRpcConfig.toString());
+
+        // 注册中心初始化
+        RegistryConfig registryConfig = rpcConfig.getRegistryConfig();
+        Registry registry = RegistryFactory.getInstance(registryConfig.getRegistry());
+        registry.init(registryConfig);
+        log.info("registry init, config = {}", registryConfig);
     }
 
     /**
@@ -53,5 +62,6 @@ public class RpcApplication {
         }
         return rpcConfig;
     }
+
 }
 

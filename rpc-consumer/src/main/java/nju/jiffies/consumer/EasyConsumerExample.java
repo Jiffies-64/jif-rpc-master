@@ -5,7 +5,7 @@ import nju.jiffies.model.User;
 import nju.jiffies.service.UserService;
 import nju.jiffies.utils.ConfigUtils;
 
-import static nju.jiffies.consumer.proxy.ServiceProxyFactory.getProxy;
+import static nju.jiffies.proxy.ServiceProxyFactory.getProxy;
 
 public class EasyConsumerExample {
 

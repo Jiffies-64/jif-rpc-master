@@ -37,7 +37,7 @@ public class HttpServerHandler implements Handler<HttpServerRequest> {
             }
 
             try {
-                Class<?> implClass = LocalRegistry.get(rpcRequest.getServiceName());
+                Class<?> implClass = LocalRegistry.get(rpcRequest.getServiceName());  // todo
                 Method method = implClass.getMethod(rpcRequest.getMethodName(), rpcRequest.getParameterTypes());
                 Object invoke = method.invoke(implClass.newInstance(), rpcRequest.getArgs());
                 rpcResponse.setData(invoke);

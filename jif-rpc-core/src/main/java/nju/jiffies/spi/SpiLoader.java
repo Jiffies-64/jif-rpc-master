@@ -1,7 +1,6 @@
 package nju.jiffies.spi;
 
 import cn.hutool.core.io.resource.ResourceUtil;
-import lombok.extern.slf4j.Slf4j;
 import nju.jiffies.serializer.Serializer;
 
 import java.io.BufferedReader;

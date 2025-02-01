@@ -1,4 +1,4 @@
-package nju.jiffies.consumer.proxy;
+package nju.jiffies.proxy;
 
 import nju.jiffies.RpcApplication;
 import java.lang.reflect.Proxy;
