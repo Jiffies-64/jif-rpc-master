@@ -8,6 +8,7 @@ import nju.jiffies.registry.LocalRegistry;
 import nju.jiffies.registry.Registry;
 import nju.jiffies.registry.RegistryFactory;
 import nju.jiffies.server.VertxHttpServer;
+import nju.jiffies.server.tcp.VertxTcpServer;
 import nju.jiffies.service.UserService;
 
 public class EasyProviderExample {
@@ -33,7 +34,8 @@ public class EasyProviderExample {
         }
 
         // 启动 web 项目
-        VertxHttpServer server = new VertxHttpServer();
+        // VertxHttpServer server = new VertxHttpServer();
+        VertxTcpServer server = new VertxTcpServer();
         server.doStart(RpcApplication.getRpcConfig().getServerPort());
     }
 }

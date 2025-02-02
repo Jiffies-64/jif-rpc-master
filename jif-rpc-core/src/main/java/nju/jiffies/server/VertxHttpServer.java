@@ -2,7 +2,7 @@ package nju.jiffies.server;
 
 import io.vertx.core.Vertx;
 
-public class VertxHttpServer implements HttpServer {
+public class VertxHttpServer implements RpcServer {
 
     @Override
     public void doStart(int port) {

@@ -1,6 +1,6 @@
 package nju.jiffies.server;
 
-public interface HttpServer {
+public interface RpcServer {
 
     void doStart(int port);
 

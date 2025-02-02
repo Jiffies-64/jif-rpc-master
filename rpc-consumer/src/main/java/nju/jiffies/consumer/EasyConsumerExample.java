@@ -16,7 +16,7 @@ public class EasyConsumerExample {
 
         // 获取代理对象
         UserService userService;
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1; i++) {
             userService = getProxy(UserService.class);
             User user = userService.getUser("jiffies");
             if (user != null) {
