@@ -8,6 +8,8 @@ import io.vertx.core.net.NetClient;
 import nju.jiffies.RpcApplication;
 import nju.jiffies.config.RpcConfig;
 import nju.jiffies.constant.RpcConstant;
+import nju.jiffies.fault.tolerant.TolerantStrategy;
+import nju.jiffies.fault.tolerant.TolerantStrategyFactory;
 import nju.jiffies.loadBalancer.LoadBalancer;
 import nju.jiffies.loadBalancer.LoadBalancerFactory;
 import nju.jiffies.model.RpcRequest;
@@ -76,11 +78,18 @@ public class ServiceProxy implements InvocationHandler {
             ServiceMetaInfo selectedServiceMetaInfo = loadBalancer.select(requestParams, serviceMetaInfoList);
 
             // 重试策略
-            RetryStrategy retry = RetryStrategyFactory.getInstance(rpcConfig.getRetryStrategy());
-            RpcResponse rpcResponse = retry.doRetry(() -> {
-                // 发送 TCP 请求
-                return VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo);
-            });
+            // rpc 请求
+            RpcResponse rpcResponse;
+            try {
+                RetryStrategy retryStrategy = RetryStrategyFactory.getInstance(rpcConfig.getRetryStrategy());
+                rpcResponse = retryStrategy.doRetry(() ->
+                        VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo)
+                );
+            } catch (Exception e) {
+                // 容错机制
+                TolerantStrategy tolerantStrategy = TolerantStrategyFactory.getInstance(rpcConfig.getTolerantStrategy());
+                rpcResponse = tolerantStrategy.doTolerant(null, e);
+            }
             return rpcResponse.getData();
         } catch (Exception e) {
             throw new RuntimeException("调用失败", e);

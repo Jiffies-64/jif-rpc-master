@@ -1,0 +1,4 @@
+failBack=nju.jiffies.fault.tolerant.FailBackTolerantStrategy
+failFast=nju.jiffies.fault.tolerant.FailFastTolerantStrategy
+failOver=nju.jiffies.fault.tolerant.FailOverTolerantStrategy
+failSafe=nju.jiffies.fault.tolerant.FailSafeTolerantStrategy

@@ -1,6 +1,7 @@
 package nju.jiffies.config;
 
 import lombok.Data;
+import nju.jiffies.fault.tolerant.TolerantStrategyKeys;
 import nju.jiffies.loadBalancer.LoadBalancerKeys;
 import nju.jiffies.retry.RetryStrategyKeys;
 import nju.jiffies.serializer.SerializerKeys;
@@ -55,6 +56,13 @@ public class RpcConfig {
      * 重试策略
      */
     private String retryStrategy = RetryStrategyKeys.FIXED_INTERVAL;
+
+
+    /**
+     * 容错策略
+     */
+    private String tolerantStrategy = TolerantStrategyKeys.FAIL_FAST;
+
 
 }
 
