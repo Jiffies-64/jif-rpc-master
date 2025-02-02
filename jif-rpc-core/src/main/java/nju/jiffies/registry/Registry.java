@@ -15,6 +15,11 @@ import java.util.List;
 public interface Registry {
 
     /**
+     * 心跳
+     */
+    void heartBeat();
+
+    /**
      * 初始化
      *
      * @param registryConfig
@@ -47,5 +52,10 @@ public interface Registry {
      * 服务销毁
      */
     void destroy();
+
+    /**
+     * 监听服务变化
+     */
+    void watch(String serviceKey);
 }
 

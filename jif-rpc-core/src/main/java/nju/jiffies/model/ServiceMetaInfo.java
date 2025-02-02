@@ -3,11 +3,13 @@ package nju.jiffies.model;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * 服务元信息（注册信息）
  */
 @Data
+@ToString
 public class ServiceMetaInfo {
 
 
@@ -54,6 +56,15 @@ public class ServiceMetaInfo {
      */
     public String getServiceNodeKey() {
         return String.format("%s/%s:%s", getServiceKey(), serviceHost, servicePort);
+    }
+
+    /**
+     * 获取非完整服务地址
+     *
+     * @return
+     */
+    public String getRawServiceAddress() {
+        return String.format("%s:%s", serviceHost, servicePort);
     }
 
     /**
