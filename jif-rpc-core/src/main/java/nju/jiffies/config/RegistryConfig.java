@@ -30,6 +30,11 @@ public class RegistryConfig {
     private String password;
 
     /**
+     * ping间隔时间（单位毫秒）
+     */
+    private Long keepAliveTime = 60_000L;
+
+    /**
      * 超时时间（单位毫秒）
      */
     private Long timeout = 10000L;

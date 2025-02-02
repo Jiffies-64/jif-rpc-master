@@ -16,6 +16,8 @@ import nju.jiffies.model.ServiceMetaInfo;
 import nju.jiffies.protocol.*;
 import nju.jiffies.registry.Registry;
 import nju.jiffies.registry.RegistryFactory;
+import nju.jiffies.retry.RetryStrategy;
+import nju.jiffies.retry.RetryStrategyFactory;
 import nju.jiffies.serializer.Serializer;
 import nju.jiffies.serializer.SerializerFactory;
 import nju.jiffies.server.tcp.VertxTcpClient;
@@ -73,11 +75,15 @@ public class ServiceProxy implements InvocationHandler {
             requestParams.put("methodName", rpcRequest.getMethodName());
             ServiceMetaInfo selectedServiceMetaInfo = loadBalancer.select(requestParams, serviceMetaInfoList);
 
-            // 发送 TCP 请求
-            RpcResponse rpcResponse = VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo);
+            // 重试策略
+            RetryStrategy retry = RetryStrategyFactory.getInstance(rpcConfig.getRetryStrategy());
+            RpcResponse rpcResponse = retry.doRetry(() -> {
+                // 发送 TCP 请求
+                return VertxTcpClient.doRequest(rpcRequest, selectedServiceMetaInfo);
+            });
             return rpcResponse.getData();
         } catch (Exception e) {
-            throw new RuntimeException("调用失败");
+            throw new RuntimeException("调用失败", e);
         }
     }
 }

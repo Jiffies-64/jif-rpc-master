@@ -2,6 +2,7 @@ package nju.jiffies.config;
 
 import lombok.Data;
 import nju.jiffies.loadBalancer.LoadBalancerKeys;
+import nju.jiffies.retry.RetryStrategyKeys;
 import nju.jiffies.serializer.SerializerKeys;
 
 /**
@@ -50,6 +51,10 @@ public class RpcConfig {
      */
     private String loadBalancer = LoadBalancerKeys.ROUND_ROBIN;
 
+    /**
+     * 重试策略
+     */
+    private String retryStrategy = RetryStrategyKeys.FIXED_INTERVAL;
 
 }
 

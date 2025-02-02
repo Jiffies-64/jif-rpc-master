@@ -1,0 +1,2 @@
+no=nju.jiffies.retry.NoRetryStrategy
+fixed=nju.jiffies.retry.FixedIntervalStrategy
