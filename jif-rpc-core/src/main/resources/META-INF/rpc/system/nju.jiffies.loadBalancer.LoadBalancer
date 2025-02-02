@@ -1,0 +1,3 @@
+roundRobin=nju.jiffies.loadBalancer.RoundRobinLoadBalancer
+random=nju.jiffies.loadBalancer.RandomLoadBalancer
+consistentHash=nju.jiffies.loadBalancer.ConsistentHashLoadBalancer

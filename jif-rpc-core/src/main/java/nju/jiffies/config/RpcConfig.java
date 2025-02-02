@@ -1,6 +1,7 @@
 package nju.jiffies.config;
 
 import lombok.Data;
+import nju.jiffies.loadBalancer.LoadBalancerKeys;
 import nju.jiffies.serializer.SerializerKeys;
 
 /**
@@ -22,12 +23,12 @@ public class RpcConfig {
     /**
      * 服务器主机名?
      */
-     private String serverHost = "localhost";
+    private String serverHost = "localhost";
 
     /**
      * 服务器端口号?
      */
-     private Integer serverPort = 8080;
+    private Integer serverPort = 8080;
 
     /**
      * 模拟调用
@@ -43,6 +44,12 @@ public class RpcConfig {
      * 注册中心配置
      */
     private RegistryConfig registryConfig = new RegistryConfig();
+
+    /**
+     * 负载均衡器
+     */
+    private String loadBalancer = LoadBalancerKeys.ROUND_ROBIN;
+
 
 }
 
