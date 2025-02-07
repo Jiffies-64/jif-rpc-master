@@ -13,7 +13,15 @@
         <option value="$PROJECT_DIR$/jif-rpc-spring-boot-starter/pom.xml" />
         <option value="$PROJECT_DIR$/example-springboot-consumer/pom.xml" />
         <option value="$PROJECT_DIR$/example-springboot-provider/pom.xml" />
+        <option value="$PROJECT_DIR$/dubbo-springboot-consumer/pom.xml" />
+        <option value="$PROJECT_DIR$/dubbo-springboot-provider/pom.xml" />
+        <option value="$PROJECT_DIR$/quickstart-service/pom.xml" />
       </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/quickstart-service/pom.xml" />
+      </set>
     </option>
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="corretto-18" project-jdk-type="JavaSDK">

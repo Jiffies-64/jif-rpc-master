@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     public User getUser(String username) {
-        System.out.println("用户名：" + username);
         return new User(username);
     }
 }

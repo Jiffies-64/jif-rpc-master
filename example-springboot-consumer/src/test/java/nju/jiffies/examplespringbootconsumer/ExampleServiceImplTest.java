@@ -1,5 +1,6 @@
 package nju.jiffies.examplespringbootconsumer;
 
+import nju.jiffies.examplespringbootconsumer.controller.UserController;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -12,10 +13,10 @@ import javax.annotation.Resource;
 class ExampleServiceImplTest {
 
     @Resource
-    private ExampleServiceImpl exampleService;
+    private UserController userController;
 
     @Test
     void test1() {
-        exampleService.test();
+        userController.getUser();
     }
 }

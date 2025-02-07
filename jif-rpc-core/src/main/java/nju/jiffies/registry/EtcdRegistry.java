@@ -129,7 +129,7 @@ public class EtcdRegistry implements Registry {
         // 优先从缓存获取服务
         List<ServiceMetaInfo> serviceMetaInfos = registryServiceCache.readCache(serviceKey);
         if (serviceMetaInfos != null) {
-            log("从缓存中读取");
+            // log("从缓存中读取");
             return serviceMetaInfos;
         }
 
@@ -146,7 +146,7 @@ public class EtcdRegistry implements Registry {
                 String key = keyValue.getKey().toString(StandardCharsets.UTF_8);
                 watch(key);
                 String value = keyValue.getValue().toString(StandardCharsets.UTF_8);
-                log("从注册中心读取");
+                // log("从注册中心读取");
                 return JSONUtil.toBean(value, ServiceMetaInfo.class);
             }).collect(Collectors.toList());
 
