@@ -37,6 +37,7 @@ public class RpcConfig {
      */
     private boolean mock = false;
 
+    /* 以下五个都是作为 SPI 机制的配置项 */
     /**
      * 序列化器
      */

@@ -25,6 +25,11 @@
             <artifactId>vertx-core</artifactId>
             <version>4.5.1</version>
         </dependency>
+        <dependency>
+            <groupId>io.vertx</groupId>
+            <artifactId>vertx-web</artifactId>
+            <version>4.5.1</version>
+        </dependency>
         <!-- https://doc.hutool.cn/ -->
         <dependency>
             <groupId>cn.hutool</groupId>
@@ -41,6 +46,22 @@
         <dependency>
             <groupId>nju.jiffies</groupId>
             <artifactId>rpc-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.3.12</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>1.5.16</version>
+        </dependency>
+        <dependency>
+            <groupId>nju.jiffies</groupId>
+            <artifactId>jif-rpc-core</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
