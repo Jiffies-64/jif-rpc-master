@@ -16,6 +16,8 @@
         <option value="$PROJECT_DIR$/dubbo-springboot-consumer/pom.xml" />
         <option value="$PROJECT_DIR$/dubbo-springboot-provider/pom.xml" />
         <option value="$PROJECT_DIR$/quickstart-service/pom.xml" />
+        <option value="$PROJECT_DIR$/feign-springboot-consumer/pom.xml" />
+        <option value="$PROJECT_DIR$/feign-springboot-provider/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
