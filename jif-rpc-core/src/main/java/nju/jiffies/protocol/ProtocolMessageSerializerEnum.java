@@ -15,8 +15,8 @@ public enum ProtocolMessageSerializerEnum {
 
     JDK(0, "jdk"),
     JSON(1, "json"),
-    KRYO(2, "kryo"),
-    HESSIAN(3, "hessian");
+    // KRYO(2, "kryo"),
+    HESSIAN(2, "hessian");
 
     private final int key;
 
@@ -42,13 +42,27 @@ public enum ProtocolMessageSerializerEnum {
      * @param key
      * @return
      */
-    public static ProtocolMessageSerializerEnum getEnumByKey(int key) {
+    public static String getNameByKey(int key) {
         for (ProtocolMessageSerializerEnum anEnum : ProtocolMessageSerializerEnum.values()) {
             if (anEnum.key == key) {
-                return anEnum;
+                return anEnum.value;
             }
         }
         return null;
+    }
+
+    /**
+     * 根据 key 获取枚举
+     *
+     * @param key
+     * @return
+     */
+    public static String getNameByKey(int key, String custom) {
+        String result = getNameByKey(key);
+        if (result != null) {
+            return result;
+        }
+        return custom;
     }
 
 

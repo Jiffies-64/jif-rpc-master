@@ -68,7 +68,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot.version}</version>
                 <configuration>
-                    <mainClass>org.apache.dubbo.samples.quickstart.QuickStartApplication</mainClass>
+                    <mainClass>nju.jiffies.feign.FeignSpringbootProviderApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

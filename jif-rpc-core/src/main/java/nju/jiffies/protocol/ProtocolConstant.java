@@ -19,5 +19,10 @@ public interface ProtocolConstant {
      * 协议版本号
      */
     byte PROTOCOL_VERSION = 0x1;
+
+    /**
+     * 自定义协议偏移量
+     */
+    int CUSTOM_PROTOCOL_OFFSET = 64;
 }
 

@@ -18,6 +18,11 @@ public class ProtocolMessage<T> {
     private Header header;
 
     /**
+     * 序列化器 key
+     */
+    private String serializerKey;
+
+    /**
      * 消息体（请求或响应对象）
      */
     private T body;

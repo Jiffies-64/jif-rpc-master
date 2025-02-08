@@ -4,6 +4,7 @@ import nju.jiffies.constant.RpcConstant;
 import nju.jiffies.fault.tolerant.TolerantStrategyKeys;
 import nju.jiffies.loadBalancer.LoadBalancerKeys;
 import nju.jiffies.retry.RetryStrategyKeys;
+import nju.jiffies.serializer.SerializerKeys;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -41,6 +42,11 @@ public @interface RpcReference {
      * 容错策略
      */
     String tolerantStrategy() default TolerantStrategyKeys.FAIL_FAST;
+
+    /**
+     * 序列化器
+     */
+    String serializeStrategy() default SerializerKeys.JDK;
 
     /**
      * 模拟调用

@@ -11,7 +11,7 @@ import java.util.Random;
 @RestController
 public class UserController {
 
-    @RpcReference
+    @RpcReference(serializeStrategy="kryo")  // "kryo" "hessian"
     private UserService userService;
 
     public String randomString(int length) {

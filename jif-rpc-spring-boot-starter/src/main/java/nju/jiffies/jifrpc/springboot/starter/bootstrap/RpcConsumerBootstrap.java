@@ -1,6 +1,7 @@
 package nju.jiffies.jifrpc.springboot.starter.bootstrap;
 
 import lombok.extern.slf4j.Slf4j;
+import nju.jiffies.RpcApplication;
 import nju.jiffies.jifrpc.springboot.starter.annotation.RpcReference;
 import nju.jiffies.proxy.ServiceProxyFactory;
 import org.springframework.beans.BeansException;
@@ -19,6 +20,10 @@ public class RpcConsumerBootstrap implements BeanPostProcessor {
         for (Field field : klass.getDeclaredFields()) {
             RpcReference annotation = field.getAnnotation(RpcReference.class);
             if (annotation != null) {
+                // todo: set serialize strategy
+                String serializeStrategy = annotation.serializeStrategy();
+                RpcApplication.getRpcConfig().setSerializer(serializeStrategy);
+
                 Class<?> interfaceClass = annotation.interfaceClass();
                 if (interfaceClass == void.class) {
                     interfaceClass = field.getType();

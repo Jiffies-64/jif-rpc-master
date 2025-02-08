@@ -6,7 +6,8 @@ package nju.jiffies.serializer;
 public interface SerializerKeys {
 
     String JDK = "jdk";
-    String KRYO = "kryo";
+    String JSON = "json";
     String HESSIAN = "hessian";
+    // String KRYO = "kryo";
 
 }

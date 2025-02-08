@@ -50,7 +50,14 @@ public class VertxTcpClient {
         ProtocolMessage.Header header = new ProtocolMessage.Header();
         header.setMagic(ProtocolConstant.PROTOCOL_MAGIC);
         header.setVersion(ProtocolConstant.PROTOCOL_VERSION);
-        header.setSerializer((byte) ProtocolMessageSerializerEnum.getEnumByValue(RpcApplication.getRpcConfig().getSerializer()).getKey());
+        String serializer = RpcApplication.getRpcConfig().getSerializer();
+        ProtocolMessageSerializerEnum serializerEnum = ProtocolMessageSerializerEnum.getEnumByValue(serializer);
+        if (serializerEnum != null) {
+            header.setSerializer((byte) serializerEnum.getKey());
+        } else {
+            protocolMessage.setSerializerKey(serializer);
+            header.setSerializer((byte) serializer.length());
+        }
         header.setType((byte) ProtocolMessageTypeEnum.REQUEST.getKey());
         // 生成全局请求 ID
         header.setRequestId(IdUtil.getSnowflakeNextId());

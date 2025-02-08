@@ -8,6 +8,10 @@ import nju.jiffies.serializer.SerializerFactory;
 
 import java.io.IOException;
 
+import static cn.hutool.core.lang.Console.log;
+import static nju.jiffies.protocol.ProtocolConstant.CUSTOM_PROTOCOL_OFFSET;
+import static nju.jiffies.protocol.ProtocolConstant.MESSAGE_HEADER_LENGTH;
+
 /**
  * 协议消息解码器
  */
@@ -35,25 +39,32 @@ public class ProtocolMessageDecoder {
         header.setStatus(buffer.getByte(4));
         header.setRequestId(buffer.getLong(5));
         header.setBodyLength(buffer.getInt(13));
-        // 解决粘包问题，只读指定长度的数据
-        byte[] bodyBytes = buffer.getBytes(17, 17 + header.getBodyLength());
         // 解析消息体
-        ProtocolMessageSerializerEnum serializerEnum = ProtocolMessageSerializerEnum.getEnumByKey(header.getSerializer());
-        if (serializerEnum == null) {
-            throw new RuntimeException("序列化消息的协议不存在");
+        boolean useCustomSerializer = false;
+        String serializerName = ProtocolMessageSerializerEnum.getNameByKey(header.getSerializer());
+        int customSerializerNameLen = 0;
+        if (serializerName == null) {
+            // 可能使用的是自定义序列化器
+            useCustomSerializer = true;
+            customSerializerNameLen = header.getSerializer() - CUSTOM_PROTOCOL_OFFSET;
+            serializerName = buffer.getString(MESSAGE_HEADER_LENGTH, MESSAGE_HEADER_LENGTH + customSerializerNameLen);
         }
-        Serializer serializer = SerializerFactory.getInstance(serializerEnum.getValue());
+        // log("使用 {} 序列化器解码", serializerName);
+        Serializer serializer = SerializerFactory.getInstance(serializerName);
         ProtocolMessageTypeEnum messageTypeEnum = ProtocolMessageTypeEnum.getEnumByKey(header.getType());
         if (messageTypeEnum == null) {
             throw new RuntimeException("序列化消息的类型不存在");
         }
+        // 解决粘包问题，只读指定长度的数据
+        int bodyStartOffset = MESSAGE_HEADER_LENGTH + customSerializerNameLen;
+        byte[] bodyBytes = buffer.getBytes(bodyStartOffset, bodyStartOffset + header.getBodyLength());
         switch (messageTypeEnum) {
             case REQUEST:
                 RpcRequest request = serializer.deserialize(bodyBytes, RpcRequest.class);
-                return new ProtocolMessage<>(header, request);
+                return new ProtocolMessage<>(header, useCustomSerializer? serializerName: null, request);
             case RESPONSE:
                 RpcResponse response = serializer.deserialize(bodyBytes, RpcResponse.class);
-                return new ProtocolMessage<>(header, response);
+                return new ProtocolMessage<>(header, useCustomSerializer? serializerName: null, response);
             case HEART_BEAT:
             case OTHERS:
             default:
