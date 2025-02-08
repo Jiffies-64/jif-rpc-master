@@ -1,6 +1,14 @@
 ## 压测报告
 
-参数设置：
+#### 参数设置：
+
+Number of threads: 100
+Ramp-up Time: 5s
+Loop: Forever
+
+
+
+#### 实验结果：
 
 ##### JifRpc
 
@@ -10,12 +18,12 @@
 
 ##### Feign
 
-2500QPS
+3200QPS
 
-![image-20250208122131391](README.assets/image-20250208122131391.png)
+![image-20250208122918475](README.assets/image-20250208122918475.png)
 
 ##### Dubbo
 
-3500QPS
+7100QPS
 
-![image-20250208121004407](README.assets/image-20250208121004407.png)
+![image-20250208122755484](README.assets/image-20250208122755484.png)
