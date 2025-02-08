@@ -36,10 +36,6 @@ import java.util.concurrent.CountDownLatch;
 
 /**
  * 服务代理（JDK 动态代理）
- *
- * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
- * @learn <a href="https://codefather.cn">编程宝典</a>
- * @from <a href="https://yupi.icu">编程导航知识星球</a>
  */
 public class ServiceProxy implements InvocationHandler {
 
