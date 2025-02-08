@@ -12,13 +12,22 @@ import nju.jiffies.model.ServiceMetaInfo;
 import nju.jiffies.protocol.*;
 
 import java.io.IOException;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.*;
 
 /**
  * Vertx TCP 请求客户端
  */
 public class VertxTcpClient {
+    private static final int MAX_POOL_SIZE = 10;
+    private static final Map<String, BlockingQueue<NetSocket>> connectionPool = new HashMap<>();
+    private static final NetClient netClient;
+
+    static {
+        Vertx vertx = Vertx.vertx();
+        netClient = vertx.createNetClient();
+    }
 
     /**
      * 发送请求
@@ -31,57 +40,78 @@ public class VertxTcpClient {
      */
     @SuppressWarnings("unchecked")
     public static RpcResponse doRequest(RpcRequest rpcRequest, ServiceMetaInfo serviceMetaInfo) throws InterruptedException, ExecutionException {
-        // 发送 TCP 请求
-        Vertx vertx = Vertx.vertx();
-        NetClient netClient = vertx.createNetClient();
+        String key = getConnectionKey(serviceMetaInfo);
+        NetSocket socket = getConnection(key, serviceMetaInfo);
+
         CompletableFuture<RpcResponse> responseFuture = new CompletableFuture<>();
-        netClient.connect(serviceMetaInfo.getServicePort(), serviceMetaInfo.getServiceHost(),
-                result -> {
-                    if (!result.succeeded()) {
-                        System.err.println("Failed to connect to TCP server");
-                        return;
-                    }
-                    NetSocket socket = result.result();
-                    // 发送数据
-                    // 构造消息
-                    ProtocolMessage<RpcRequest> protocolMessage = new ProtocolMessage<>();
-                    ProtocolMessage.Header header = new ProtocolMessage.Header();
-                    header.setMagic(ProtocolConstant.PROTOCOL_MAGIC);
-                    header.setVersion(ProtocolConstant.PROTOCOL_VERSION);
-                    header.setSerializer((byte) ProtocolMessageSerializerEnum.getEnumByValue(RpcApplication.getRpcConfig().getSerializer()).getKey());
-                    header.setType((byte) ProtocolMessageTypeEnum.REQUEST.getKey());
-                    // 生成全局请求 ID
-                    header.setRequestId(IdUtil.getSnowflakeNextId());
-                    protocolMessage.setHeader(header);
-                    protocolMessage.setBody(rpcRequest);
 
-                    // 编码请求
+        // 构造消息
+        ProtocolMessage<RpcRequest> protocolMessage = new ProtocolMessage<>();
+        ProtocolMessage.Header header = new ProtocolMessage.Header();
+        header.setMagic(ProtocolConstant.PROTOCOL_MAGIC);
+        header.setVersion(ProtocolConstant.PROTOCOL_VERSION);
+        header.setSerializer((byte) ProtocolMessageSerializerEnum.getEnumByValue(RpcApplication.getRpcConfig().getSerializer()).getKey());
+        header.setType((byte) ProtocolMessageTypeEnum.REQUEST.getKey());
+        // 生成全局请求 ID
+        header.setRequestId(IdUtil.getSnowflakeNextId());
+        protocolMessage.setHeader(header);
+        protocolMessage.setBody(rpcRequest);
+
+        // 编码请求
+        try {
+            Buffer encodeBuffer = ProtocolMessageEncoder.encode(protocolMessage);
+            socket.write(encodeBuffer);
+        } catch (IOException e) {
+            throw new RuntimeException("协议消息编码错误");
+        }
+
+        // 接收响应
+        TcpBufferHandlerWrapper bufferHandlerWrapper = new TcpBufferHandlerWrapper(
+                buffer -> {
                     try {
-                        Buffer encodeBuffer = ProtocolMessageEncoder.encode(protocolMessage);
-                        socket.write(encodeBuffer);
+                        ProtocolMessage<RpcResponse> rpcResponseProtocolMessage =
+                                (ProtocolMessage<RpcResponse>) ProtocolMessageDecoder.decode(buffer);
+                        responseFuture.complete(rpcResponseProtocolMessage.getBody());
+                        releaseConnection(key, socket);
                     } catch (IOException e) {
-                        throw new RuntimeException("协议消息编码错误");
+                        throw new RuntimeException("协议消息解码错误");
                     }
+                }
+        );
+        socket.handler(bufferHandlerWrapper);
 
-                    // 接收响应
-                    TcpBufferHandlerWrapper bufferHandlerWrapper = new TcpBufferHandlerWrapper(
-                            buffer -> {
-                                try {
-                                    ProtocolMessage<RpcResponse> rpcResponseProtocolMessage =
-                                            (ProtocolMessage<RpcResponse>) ProtocolMessageDecoder.decode(buffer);
-                                    responseFuture.complete(rpcResponseProtocolMessage.getBody());
-                                } catch (IOException e) {
-                                    throw new RuntimeException("协议消息解码错误");
-                                }
-                            }
-                    );
-                    socket.handler(bufferHandlerWrapper);
+        return responseFuture.get();
+    }
 
-                });
+    private static String getConnectionKey(ServiceMetaInfo serviceMetaInfo) {
+        return serviceMetaInfo.getServiceHost() + ":" + serviceMetaInfo.getServicePort();
+    }
 
-        RpcResponse rpcResponse = responseFuture.get();
-        // 记得关闭连接
-        netClient.close();
-        return rpcResponse;
+    private static NetSocket getConnection(String key, ServiceMetaInfo serviceMetaInfo) throws InterruptedException, ExecutionException {
+        BlockingQueue<NetSocket> queue = connectionPool.computeIfAbsent(key, k -> new LinkedBlockingQueue<>(MAX_POOL_SIZE));
+        NetSocket socket = queue.poll();
+        if (socket == null) {
+            CompletableFuture<NetSocket> future = new CompletableFuture<>();
+            netClient.connect(serviceMetaInfo.getServicePort(), serviceMetaInfo.getServiceHost(),
+                    result -> {
+                        if (!result.succeeded()) {
+                            System.err.println("Failed to connect to TCP server");
+                            future.completeExceptionally(result.cause());
+                        } else {
+                            future.complete(result.result());
+                        }
+                    });
+            socket = future.get();
+        }
+        return socket;
+    }
+
+    private static void releaseConnection(String key, NetSocket socket) {
+        BlockingQueue<NetSocket> queue = connectionPool.get(key);
+        if (queue != null && queue.size() < MAX_POOL_SIZE) {
+            queue.offer(socket);
+        } else {
+            socket.close();
+        }
     }
 }
